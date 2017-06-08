@@ -1,0 +1,44 @@
+Queries2 
+
+"Number of deaths at a particular age."
+PREFIX ds: <http://data.ct.gov/resource/deaths/>
+SELECT ?Age (COUNT(DISTINCT ?x) AS  ?Count) 
+WHERE {
+ ?x ds:age ?Age . 
+}
+GROUP BY ?Age
+ORDER BY DESC(?Age)
+
+"Where people died.""
+
+PREFIX ds: <http://data.ct.gov/resource/deaths/>
+SELECT ?Injuryplace (COUNT(DISTINCT ?x) AS  ?Count) 
+WHERE {
+ ?x ds:injuryplace ?Injuryplace .
+}
+GROUP BY ?Injuryplace
+ORDER BY DESC(?Count)
+
+
+"Cause of death for under 21 + Race + Gender"
+PREFIX ds: <http://data.ct.gov/resource/deaths/>
+SELECT ?Age ?Sex ?Race ?Cause
+WHERE {
+ ?x ds:age ?Age . FILTER (?Age < "21")
+ ?x ds:sex ?Sex .
+ ?x ds:race ?Race .
+ ?x ds:immediatecausea ?Cause 
+}
+ORDER BY ASC(?Age)
+
+
+"Number of Deaths according to Race"
+
+PREFIX ds:<http://data.ct.gov/resource/deaths/>
+SELECT ?Race  (COUNT(DISTINCT ?x) as ?deaths)
+WHERE {
+?x ds:race ?Race  .
+?x ds:age ?z  
+}
+GROUP BY ?Race 
+Order By DESC (?deaths)

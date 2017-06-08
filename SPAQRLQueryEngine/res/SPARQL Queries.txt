@@ -1,0 +1,6 @@
+PREFIX ds: <http://data.ct.gov/resource/deaths/>
+SELECT ?y
+WHERE {
+?x ds:date ?y .
+FILTER (?y > "2015" && ?y < "2016")
+}

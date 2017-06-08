@@ -1,0 +1,44 @@
+
+Number of deaths from drugs last year, based on sex.
+PREFIX ds:<http://data.ct.gov/resource/deaths/>
+
+SELECT ?Gender ?County (COUNT(DISTINCT ?instance) AS ?Count)
+WHERE {
+?instance ds:sex ?Gender  .
+?instance ds:death_county ?County  .
+?instance ds:date ?y   BIND(substr(?y,1,4) AS ?year)   .
+FILTER (?year = "2015")}
+GROUP BY ?Gender ?County
+ORDER BY DESC(?Count)
+
+"Deaths per county per year from drugs, people ages 30+"
+PREFIX ds:<http://data.ct.gov/resource/deaths/>
+
+SELECT ?county ?year (COUNT(DISTINCT ?x) as ?deaths)
+WHERE {
+?x ds:death_county ?county  .
+?x ds:date ?y   BIND(substr(?y,1,4) AS ?year)   .
+?x ds:age ?z  .  FILTER ( ?z >="30")}
+GROUP BY ?county ?year
+ORDER BY DESC(?year)
+
+"Most deaths in a year"
+PREFIX ds:<http://data.ct.gov/resource/deaths/>
+PREFIX xsd:   <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?year (COUNT(DISTINCT ?x) as ?deaths)
+WHERE {
+?x ds:date ?y   BIND(substr(?y,1,4) AS ?year)}
+GROUP BY ?year
+ORDER BY DESC(xsd:integer(?deaths)) LIMIT 1
+
+"Counties and recorded causes of death"
+PREFIX ds:<http://data.ct.gov/resource/deaths/>
+
+SELECT ?county ?CauseofDeath
+WHERE {
+?x ds:death_county ?county  .
+?x ds:immediatecausea ?CauseofDeath
+}
+GROUP BY ?county ?CauseofDeath
+ORDER BY ?county
